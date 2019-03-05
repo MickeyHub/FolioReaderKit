@@ -9,6 +9,12 @@
 import UIKit
 import ZFDragableModalTransition
 
+@objc public protocol FolioReaderCenterPaginationDelegate: class {
+    
+    @objc optional func paginationHtmlContent(htmlContent: String, for page: Int)
+    @objc optional func paginationStandingTime(standingTime: Int)
+}
+
 /// Protocol which is used from `FolioReaderCenter`s.
 @objc public protocol FolioReaderCenterDelegate: class {
 
@@ -38,6 +44,9 @@ open class FolioReaderCenter: UIViewController, UICollectionViewDelegate, UIColl
     /// This delegate receives the events from the current `FolioReaderPage`s delegate.
     open weak var delegate: FolioReaderCenterDelegate?
 
+    /// This delegete receives the evnets from current pagination
+    open weak var paginationDelegate: FolioReaderCenterPaginationDelegate?
+    
     /// This delegate receives the events from current page
     open weak var pageDelegate: FolioReaderPageDelegate?
 
@@ -1276,6 +1285,22 @@ open class FolioReaderCenter: UIViewController, UICollectionViewDelegate, UIColl
         
         if (scrollView is UICollectionView) {
             scrollView.isUserInteractionEnabled = true
+        }
+        
+        if let currentPagination = collectionView.visibleCells.first as? FolioReaderPage {
+33
+//            print("==============================")
+//            print(self.currentPageNumber)
+//            print(self.getCurrentPageItemNumber())
+//            print(self.getCurrentChapter())
+//            print(self.getCurrentChapterName())
+//            print(self.getCurrentIndexPath())
+//            print(self.getCurrentPageProgress())
+//            print(self.getCurrentChapterProgress())
+//            print("==============================")
+//
+            let resource = self.book.spine.spineReferences[getCurrentIndexPath().row].resource
+            let html = try? String(contentsOfFile: resource.fullHref, encoding: String.Encoding.utf8)
         }
 
         // Perform the page after a short delay as the collection view hasn't completed it's transition if this method is called (the index paths aren't right during fast scrolls).
