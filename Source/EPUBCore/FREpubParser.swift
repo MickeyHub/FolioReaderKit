@@ -139,6 +139,11 @@ class FREpubParser: NSObject, SSZipArchiveDelegate {
     /// - Throws: `FolioReaderError`
     private func readOpf(with bookBasePath: String) throws {
         let opfPath = bookBasePath.appendingPathComponent(book.opfResource.href)
+        
+        let originalOpf = try String(contentsOfFile: opfPath)
+        let newOpf = originalOpf.replacingOccurrences(of: "opf:", with: "")
+        try newOpf.write(toFile: opfPath, atomically: true, encoding: .utf8)
+        
         var identifier: String?
 
         let opfData = try Data(contentsOf: URL(fileURLWithPath: opfPath), options: .alwaysMapped)
